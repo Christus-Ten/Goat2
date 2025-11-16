@@ -7,7 +7,7 @@ module.exports = {
     name: "quiz",
     aliases: ["q"],
     version: "3.0",
-    author: "Aryan Chauhan",
+    author: "Christus",
     countDown: 0, 
     role: 0,
     longDescription: { 
