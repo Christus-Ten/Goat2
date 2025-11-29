@@ -1,9 +1,6 @@
 const guessOptions = ["🐣", "🙂", "🍀", "🌸", "🌼", "🐟", "🍎", "🍪", "🦄", "🍀"];
 const fs = require("fs");
 
-const LIMIT_INTERVAL_HOURS = 12;
-const MAX_PLAYS = 20;
-
 module.exports = {
   config: {
     name: "guess",
@@ -11,12 +8,12 @@ module.exports = {
     author: "Christus",
     countDown: 5,
     role: 0,
-    category: "game",
+    category: "jeu",
     shortDescription: {
-      en: "Guess the emoji!"
+      fr: "Devine l'emoji !"
     },
     guide: {
-      en: "{pn} [amount] - Play guessing game\n{pn} top - See leaderboard"
+      fr: "{pn} [montant] - Jouer au jeu de devinette\n{pn} top - Voir le classement"
     }
   },
 
@@ -31,41 +28,23 @@ module.exports = {
         .slice(0, 20);
 
       if (filtered.length === 0)
-        return message.reply("🚫 No winners yet!");
+        return message.reply("🚫 Aucun gagnant pour le moment !");
 
       const topList = filtered.map((u, i) =>
-        `${i + 1}. ${u.name} - 🏆 ${u.data.guessWin || 0} wins`
+        `${i + 1}. ${u.name} - 🏆 ${u.data.guessWin || 0} victoires`
       ).join("\n");
 
-      return message.reply(`🏆 TOP 20 GUESS WINNERS 🏆\n\n${topList}`);
+      return message.reply(`🏆 TOP 20 DES GAGNANTS DU JEU 🏆\n\n${topList}`);
     }
 
     const user = await usersData.get(senderID);
     const amount = parseInt(args[0]);
 
     if (isNaN(amount) || amount <= 0)
-      return message.reply("⚠️ Please enter a valid positive amount to bet.");
+      return message.reply("⚠️ Veuillez entrer un montant positif valide.");
 
     if (user.money < amount)
-      return message.reply("💸 You don't have enough money to play.");
-
-    // Limit logic
-    const now = Date.now();
-    const lastReset = user.data?.guessLastReset || 0;
-    const playHistory = user.data?.guessPlayHistory || [];
-
-    // If last reset was over 12 hours ago, reset the play history
-    if (now - lastReset > LIMIT_INTERVAL_HOURS * 60 * 60 * 1000) {
-      playHistory.length = 0;
-      await usersData.set(senderID, {
-        "data.guessLastReset": now,
-        "data.guessPlayHistory": []
-      });
-    }
-
-    if (playHistory.length >= MAX_PLAYS) {
-      return message.reply(`⛔ You've reached the limit of ${MAX_PLAYS} plays in ${LIMIT_INTERVAL_HOURS} hours.\n⏳ Please wait and try again later.`);
-    }
+      return message.reply("💸 Vous n'avez pas assez d'argent pour jouer.");
 
     const options = [];
     for (let i = 0; i < 3; i++) {
@@ -77,13 +56,13 @@ module.exports = {
     const correctEmoji = options[correctIndex];
 
     const msg = await message.reply(
-      `🎯 GUESS THE EMOJI!\n\n` +
+      `🎯 DEVINE L'EMOJI !\n\n` +
       `1️⃣ ${options[0]}    2️⃣ ${options[1]}    3️⃣ ${options[2]}\n\n` +
-      `Reply with 1, 2, or 3 within 30 seconds to guess.`
+      `Réponds avec 1, 2 ou 3 pour deviner.`
     );
 
     const timeout = setTimeout(() => {
-      message.reply("⌛ Time's up! You didn't guess in time.");
+      message.reply("⌛ Temps écoulé ! Vous n'avez pas deviné à temps.");
       global.GoatBot.onReply.delete(msg.messageID);
     }, 30 * 1000);
 
@@ -94,36 +73,24 @@ module.exports = {
       bet: amount,
       emoji: correctEmoji,
       messageID: msg.messageID,
-      timeout,
-      playHistory
+      timeout
     });
-
-    const remaining = MAX_PLAYS - playHistory.length - 1;
   },
 
   onReply: async function ({ event, message, Reply, usersData }) {
     const senderID = event.senderID;
 
     if (!["1", "2", "3"].includes(event.body.trim()))
-      return message.reply("⚠️ Please reply with 1, 2, or 3 only.");
+      return message.reply("⚠️ Veuillez répondre uniquement avec 1, 2 ou 3.");
 
     if (senderID !== Reply.author)
-      return message.reply("❌ This is not your game!");
+      return message.reply("❌ Ce n'est pas votre partie !");
 
     clearTimeout(Reply.timeout);
     global.GoatBot.onReply.delete(Reply.messageID);
 
     const user = await usersData.get(senderID);
     const guess = parseInt(event.body.trim());
-
-    const now = Date.now();
-    const playHistory = user.data?.guessPlayHistory || [];
-
-    // Add current time to history
-    playHistory.push(now);
-    await usersData.set(senderID, {
-      "data.guessPlayHistory": playHistory
-    });
 
     let resultMessage = "";
 
@@ -136,26 +103,21 @@ module.exports = {
       });
 
       resultMessage =
-        `✅ Correct! The emoji was ${Reply.emoji}\n\n` +
-        `💰 You won: ${Reply.bet * 4} coins\n` +
-        `💵 Your new balance: ${newMoney} coins\n\n` +
-        `🎉 Congratulations!`;
+        `✅ Correct ! L'emoji était ${Reply.emoji}\n\n` +
+        `💰 Vous avez gagné : ${Reply.bet * 4} pièces\n` +
+        `💵 Votre nouveau solde : ${newMoney} pièces\n\n` +
+        `🎉 Félicitations !`;
     } else {
       const newMoney = user.money - Reply.bet;
       await usersData.set(senderID, { money: newMoney });
 
       resultMessage =
-        `❌ Wrong! The correct answer was ${Reply.correct} → ${Reply.emoji}\n\n` +
-        `💸 You lost: ${Reply.bet} coins\n` +
-        `💵 Your new balance: ${newMoney} coins\n\n` +
-        `😢 Better luck next time!`;
+        `❌ Faux ! La bonne réponse était ${Reply.correct} → ${Reply.emoji}\n\n` +
+        `💸 Vous avez perdu : ${Reply.bet} pièces\n` +
+        `💵 Votre nouveau solde : ${newMoney} pièces\n\n` +
+        `😢 Bonne chance la prochaine fois !`;
     }
 
-    const remaining = MAX_PLAYS - playHistory.length;
-    const limitInfo =
-      `🎮 You've played ${playHistory.length}/${MAX_PLAYS} times in the last ${LIMIT_INTERVAL_HOURS} hours.\n` +
-      `${remaining > 0 ? `🕹️ You can play ${remaining} more time(s).` : `⛔ No more plays left.`}`;
-
-    return message.reply(`${resultMessage}\n\n${limitInfo}`);
+    return message.reply(resultMessage);
   }
 };
