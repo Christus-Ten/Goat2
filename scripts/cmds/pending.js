@@ -17,23 +17,23 @@ module.exports = {
     countDown: 5,
     role: 2,
     shortDescription: {
-      en: "Approve or refuse pending threads"
+      en: "Approuver ou refuser les discussions en attente"
     },
     longDescription: {
-      en: "Reply with thread numbers to approve or reply with c[number(s)] / cancel[number(s)] to refuse."
+      en: "Répondez avec les numéros des discussions pour approuver ou répondez avec c[numéro(s)] / cancel[numéro(s)] pour refuser."
     },
     category: "admin"
   },
 
   langs: {
     en: {
-      invaildNumber: "%1 is not a valid number",
-      cancelSuccess: "Refused %1 thread(s)!",
-      approveSuccess: "Approved successfully %1 thread(s)!",
-      cantGetPendingList: "Can't get the pending list!",
+      invaildNumber: "%1 n'est pas un numéro valide",
+      cancelSuccess: "Refusé %1 discussion(s) !",
+      approveSuccess: "Approuvé avec succès %1 discussion(s) !",
+      cantGetPendingList: "Impossible d'obtenir la liste des discussions en attente !",
       returnListPending:
-        "»「PENDING」«❮ Total pending threads: %1 ❯\n\n%2\n\n💡 Guide:\n- Approve: reply with numbers (e.g. 1 2 3)\n- Refuse: reply with c[number(s)] or cancel[number(s)] (e.g. c 1 2 or cancel 3 4)",
-      returnListClean: "「PENDING」There is no thread in the pending list"
+        "»「EN ATTENTE」«❮ Total des discussions en attente : %1 ❯\n\n%2\n\n💡 Guide :\n- Approuver : répondez avec les numéros (ex : 1 2 3)\n- Refuser : répondez avec c[numéro(s)] ou cancel[numéro(s)] (ex : c 1 2 ou cancel 3 4)",
+      returnListClean: "「EN ATTENTE」Il n'y a aucune discussion en attente"
     }
   },
 
@@ -53,7 +53,7 @@ module.exports = {
 
       if (index.length === 0)
         return api.sendMessage(
-          "Please provide at least one thread number to cancel.",
+          "Veuillez fournir au moins un numéro de discussion à refuser.",
           threadID,
           messageID
         );
@@ -69,7 +69,7 @@ module.exports = {
           await api.removeUserFromGroup(BOT_UID, targetThreadID);
           count++;
         } catch (error) {
-          console.error(`⚠️ Failed to remove bot from thread ${targetThreadID}:`, error.message);
+          console.error(`⚠️ Impossible de retirer le bot de la discussion ${targetThreadID} :`, error.message);
         }
       }
 
@@ -79,7 +79,7 @@ module.exports = {
     else {
       const index = body.split(/\s+/).filter(Boolean);
       if (index.length === 0)
-        return api.sendMessage("Please provide at least one thread number to approve.", threadID, messageID);
+        return api.sendMessage("Veuillez fournir au moins un numéro de discussion à approuver.", threadID, messageID);
 
       for (const i of index) {
         if (isNaN(i) || i <= 0 || i > Reply.pending.length) {
@@ -94,7 +94,7 @@ module.exports = {
         try {
           await api.changeNickname(nickNameBot, targetThread, BOT_UID);
         } catch (err) {
-          console.warn(`⚠️ Nickname change failed for ${targetThread}:`, err.message);
+          console.warn(`⚠️ Le changement de pseudo a échoué pour ${targetThread} :`, err.message);
         }
 
         try {
@@ -107,11 +107,11 @@ module.exports = {
           fs.writeFileSync(imagePath, response.data);
 
           const textMsg = [
-            "✅ 𝐆𝐫𝐨𝐮𝐩 𝐂𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 🎊",
-            `🔹 𝐁𝐨𝐭 𝐏𝐫𝐞𝐟𝐢𝐱: ${prefix}`,
-            `🔸 𝐓𝐲𝐩𝐞: ${prefix}help 𝐭𝐨 𝐬𝐞𝐞 𝐚𝐥𝐥 𝐜𝐨𝐦𝐦𝐚𝐧𝐝𝐬`,
+            "✅ 𝐆𝐫𝐨𝐮𝐩𝐞 𝐂𝐨𝐧𝐧𝐞𝐜𝐭𝐞́ 𝐀𝐯𝐞𝐜 𝐒𝐮𝐜𝐜𝐞̀𝐬 🎊",
+            `🔹 𝐏𝐫𝐞𝐟𝐢𝐱 𝐝𝐮 𝐁𝐨𝐭: ${prefix}`,
+            `🔸 𝐓𝐚𝐩𝐞𝐳: ${prefix}help 𝐩𝐨𝐮𝐫 𝐯𝐨𝐢𝐫 𝐭𝐨𝐮𝐬 𝐥𝐞𝐬 𝐜𝐨𝐦𝐦𝐚𝐧𝐝𝐞𝐬`,
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-            `👑 𝐎𝐰𝐧𝐞𝐫: ${ownerInfo.name}`,
+            `👑 𝐏𝐫𝐨𝐩𝐫𝐢𝐞́𝐭𝐚𝐢𝐫𝐞: ${ownerInfo.name}`,
             `🌐 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤: ${ownerInfo.facebook}`,
             `✈️ 𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦: ${ownerInfo.telegram}`,
             `🤖 𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐆𝐂: ${ownerInfo.supportGroup}`
@@ -127,15 +127,15 @@ module.exports = {
 
           fs.unlinkSync(imagePath);
         } catch (err) {
-          console.error(`⚠️ Error sending botconnect message to ${targetThread}:`, err);
+          console.error(`⚠️ Erreur lors de l'envoi du message botconnect vers ${targetThread}:`, err);
 
           const fallbackMsg = [
-            "❌ Image generation failed. Here's the info:",
-            "✅ Group Connected Successfully 🎊",
-            `🔹 Prefix: ${prefix}`,
-            `🔸 Type: ${prefix}help for commands`,
+            "❌ Échec de génération d'image. Voici les informations :",
+            "✅ Groupe Connecté Avec Succès 🎊",
+            `🔹 Préfixe: ${prefix}`,
+            `🔸 Tapez: ${prefix}help pour les commandes`,
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-            `👑 Owner: ${ownerInfo.name}`,
+            `👑 Propriétaire: ${ownerInfo.name}`,
             `🌐 Facebook: ${ownerInfo.facebook}`,
             `✈️ Telegram: ${ownerInfo.telegram}`,
             `🤖 Support GC: ${ownerInfo.supportGroup}`
