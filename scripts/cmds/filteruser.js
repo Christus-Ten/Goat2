@@ -10,34 +10,23 @@ module.exports = {
 		countDown: 5,
 		role: 1,
 		description: {
-			vi: "lọc thành viên nhóm theo số tin nhắn hoặc bị khóa acc",
-			en: "filter group members by number of messages or locked account"
+			fr: "Filtrer les membres du groupe selon le nombre de messages ou si le compte est verrouillé"
 		},
-		category: "box chat",
+		category: "discussion de groupe",
 		guide: {
-			vi: "   {pn} [<số tin nhắn> | die]",
-			en: "   {pn} [<number of messages> | die]"
+			fr: "   {pn} [<nombre de messages> | die]"
 		}
 	},
 
 	langs: {
-		vi: {
-			needAdmin: "⚠️ | Vui lòng thêm bot làm quản trị viên của box để sử dụng lệnh này",
-			confirm: "⚠️ | Bạn có chắc chắn muốn xóa thành viên nhóm có số tin nhắn nhỏ hơn %1 không?\nThả cảm xúc bất kì vào tin nhắn này để xác nhận",
-			kickByBlock: "✅ | Đã xóa thành công %1 thành viên bị khóa acc",
-			kickByMsg: "✅ | Đã xóa thành công %1 thành viên có số tin nhắn nhỏ hơn %2",
-			kickError: "❌ | Đã xảy ra lỗi không thể kick %1 thành viên:\n%2",
-			noBlock: "✅ | Không có thành viên nào bị khóa acc",
-			noMsg: "✅ | Không có thành viên nào có số tin nhắn nhỏ hơn %1"
-		},
-		en: {
-			needAdmin: "⚠️ | Please add the bot as a group admin to use this command",
-			confirm: "⚠️ | Are you sure you want to delete group members with less than %1 messages?\nReact to this message to confirm",
-			kickByBlock: "✅ | Successfully removed %1 members unavailable account",
-			kickByMsg: "✅ | Successfully removed %1 members with less than %2 messages",
-			kickError: "❌ | An error occurred and could not kick %1 members:\n%2",
-			noBlock: "✅ | There are no members who are locked acc",
-			noMsg: "✅ | There are no members with less than %1 messages"
+		fr: {
+			needAdmin: "⚠️ | Veuillez ajouter le bot en tant qu'administrateur du groupe pour utiliser cette commande",
+			confirm: "⚠️ | Êtes-vous sûr de vouloir supprimer les membres du groupe ayant moins de %1 messages ?\nRéagissez à ce message pour confirmer",
+			kickByBlock: "✅ | %1 membres avec un compte verrouillé ont été supprimés avec succès",
+			kickByMsg: "✅ | %1 membres ayant moins de %2 messages ont été supprimés avec succès",
+			kickError: "❌ | Une erreur est survenue et il est impossible de supprimer %1 membres :\n%2",
+			noBlock: "✅ | Aucun membre avec un compte verrouillé",
+			noMsg: "✅ | Aucun membre n'a moins de %1 messages"
 		}
 	},
 
@@ -96,7 +85,7 @@ module.exports = {
 		const membersCountLess = threadData.members.filter(member =>
 			member.count < minimum
 			&& member.inGroup == true
-			// ignore bot and admin box
+			// ignorer le bot et les admins
 			&& member.userID != botID
 			&& !threadData.adminIDs.some(id => id == member.userID)
 		);
