@@ -6,17 +6,15 @@ module.exports = {
   config: {
     name: "fluxpro",
     version: "1.0",
-    author: "Saimx69x (API by Renz)",
+    author: "Christus",
     countDown: 5,
     role: 0,
     description: {
-      en: "Generate an AI image using the Oculux Flux 1.1 Pro API",
-      vi: "Tạo ảnh AI bằng Oculux Flux 1.1 Pro API",
+      fr: "Génère une image IA en utilisant l'API Oculux Flux 1.1 Pro",
     },
-    category: "image generator",
+    category: "générateur d'image",
     guide: {
-      en: "{pn} <prompt>\nExample: {prefix}fluxpro cyberpunk samurai in rain",
-      vi: "{pn} <prompt>\nVí dụ: {prefix}fluxpro cyberpunk samurai in rain",
+      fr: "{pn} <prompt>\nExemple : {prefix}fluxpro samouraï cyberpunk sous la pluie",
     },
   },
 
@@ -29,13 +27,13 @@ module.exports = {
     const prompt = args.join(" ");
     if (!prompt) {
       return message.reply(
-        `⚠️ Please provide a prompt.\nExample: ${prefix}${commandName} futuristic dragon flying in space`
+        `⚠️ Veuillez fournir un prompt.\nExemple : ${prefix}${commandName} dragon futuriste volant dans l'espace`
       );
     }
 
     api.setMessageReaction("🎨", event.messageID, () => {}, true);
     const waitingMsg = await message.reply(
-      "🎨 Generating your image... Please wait..."
+      "🎨 Génération de votre image... Veuillez patienter..."
     );
 
     const encodedPrompt = encodeURIComponent(prompt);
@@ -48,7 +46,7 @@ module.exports = {
 
       await message.reply(
         {
-          body: `✅ Here is your FluxPro AI image.\n🖋️ Prompt: ${prompt}`,
+          body: `✅ Voici votre image FluxPro IA.\n🖋️ Prompt : ${prompt}`,
           attachment: fs.createReadStream(imgPath),
         },
         () => {
@@ -57,8 +55,8 @@ module.exports = {
         }
       );
     } catch (error) {
-      console.error("FluxPro generation error:", error);
-      message.reply("⚠️ Failed to generate FluxPro image. Please try again later.");
+      console.error("Erreur de génération FluxPro :", error);
+      message.reply("⚠️ Échec lors de la génération de l'image FluxPro. Veuillez réessayer plus tard.");
       if (waitingMsg?.messageID) api.unsendMessage(waitingMsg.messageID);
     }
   },
