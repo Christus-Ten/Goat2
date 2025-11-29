@@ -15,20 +15,20 @@ module.exports = {
   config: {
     name: "kiss",
     version: "2.0",
-    author: "Saimx69x",
+    author: "Christus",
     countDown: 5,
     role: 0,
     description:
-      "💋 Create a romantic kiss image between you and your tagged partner! This command beautifully merges both avatars on a stylish background to capture the perfect kiss moment. Just tag someone or reply to their message to share a lovely virtual kiss! 💞",
+      "💋 Crée une image romantique de baiser entre toi et la personne taguée ! Cette commande fusionne joliment les avatars sur un fond élégant pour capturer le moment parfait du baiser. Il suffit de taguer quelqu’un ou de répondre à son message pour partager un baiser virtuel plein d’amour ! 💞",
     category: "love",
     guide: {
-      en: "{pn} @tag or reply to someone's message — Create a romantic kiss image 💋"
+      en: "{pn} @tag ou répondre au message de quelqu’un — Crée une image romantique de baiser 💋"
     }
   },
 
   langs: {
     en: {
-      noTag: "Please tag someone or reply to their message to use this command 💋"
+      noTag: "Veuillez taguer quelqu’un ou répondre à son message pour utiliser cette commande 💋"
     }
   },
 
@@ -43,12 +43,12 @@ module.exports = {
       return message.reply(getLang("noTag"));
 
     try {
-      const name1 = (await usersData.getName(uid1)) || "Unknown";
+      const name1 = (await usersData.getName(uid1)) || "Inconnu";
       const name2 =
         (await usersData.getName(uid2)) ||
         (event.mentions[uid2]
           ? event.mentions[uid2].replace("@", "")
-          : "Unknown");
+          : "Inconnu");
 
       await fs.ensureDir(path.dirname(localBgPath));
       if (!fs.existsSync(localBgPath)) {
@@ -68,7 +68,7 @@ module.exports = {
       ]);
 
       if (!boy || !girl)
-        throw new Error("Avatar load failed.");
+        throw new Error("Échec du chargement des avatars.");
 
       const canvas = createCanvas(bgImg.width, bgImg.height);
       const ctx = canvas.getContext("2d");
@@ -93,7 +93,7 @@ module.exports = {
       const imgPath = path.join(savePath, `${uid1}_${uid2}_kiss.jpg`);
       await fs.writeFile(imgPath, canvas.toBuffer("image/jpeg"));
 
-      const text = `💋 ${name1} just kissed ${name2}! ❤️`;
+      const text = `💋 ${name1} vient de faire un bisou à ${name2} ! ❤️`;
 
       await message.reply({
         body: text,
@@ -105,8 +105,8 @@ module.exports = {
       }, 5000);
 
     } catch (err) {
-      console.error("❌ Error in kiss.js:", err);
-      return message.reply("❌ | Couldn't create the kiss image, please try again later.");
+      console.error("❌ Erreur dans kiss.js :", err);
+      return message.reply("❌ | Impossible de créer l'image du baiser, veuillez réessayer plus tard.");
     }
   }
 };
