@@ -7,12 +7,12 @@ module.exports.config = {
   name: "imagedetail",
   aliases: ["imgdetail"],
   version: "1.0",
-  author: "Saimx69x",
+  author: "Christus",
   countDown: 5,
   role: 0,
-  description: "Show detailed metadata of an image",
+  description: "Afficher les métadonnées détaillées d'une image",
   category: "image",
-  guide: "{pn} reply to an image"
+  guide: "{pn} répondre à une image"
 };
 
 module.exports.onStart = async ({ api, event }) => {
@@ -20,7 +20,7 @@ module.exports.onStart = async ({ api, event }) => {
     const attachment = event.messageReply?.attachments?.[0];
     if (!attachment || attachment.type !== "photo") {
       return api.sendMessage(
-        "📸 𝐏𝐥𝐞𝐚𝐬𝐞 𝐫𝐞𝐩𝐥𝐲 𝐭𝐨 𝐚 𝐩𝐡𝐨𝐭𝐨 𝐭𝐨 𝐠𝐞𝐭 𝐢𝐭𝐬 𝐝𝐞𝐭𝐚𝐢𝐥𝐬!",
+        "📸 Veuillez répondre à une photo pour obtenir ses détails !",
         event.threadID,
         event.messageID
       );
@@ -39,7 +39,6 @@ module.exports.onStart = async ({ api, event }) => {
 
     function approximateRatio(width, height) {
       const ratioDecimal = width / height;
-
       const standardRatios = [
         { ratio: 1, label: "1:1" },
         { ratio: 4 / 3, label: "4:3" },
@@ -50,10 +49,8 @@ module.exports.onStart = async ({ api, event }) => {
         { ratio: 3 / 4, label: "3:4" },
         { ratio: 2 / 3, label: "2:3" },
       ];
-
       let closest = standardRatios[0];
       let minDiff = Math.abs(ratioDecimal - closest.ratio);
-
       for (const r of standardRatios) {
         const diff = Math.abs(ratioDecimal - r.ratio);
         if (diff < minDiff) {
@@ -61,7 +58,6 @@ module.exports.onStart = async ({ api, event }) => {
           closest = r;
         }
       }
-
       return closest.label;
     }
 
@@ -70,26 +66,26 @@ module.exports.onStart = async ({ api, event }) => {
 
     if (metadata.width && metadata.height) {
       ratio = approximateRatio(metadata.width, metadata.height);
-
-      if (metadata.width > metadata.height) orientationType = "Landscape";
+      if (metadata.width > metadata.height) orientationType = "Paysage";
       else if (metadata.width < metadata.height) orientationType = "Portrait";
-      else orientationType = "Square";
+      else orientationType = "Carré";
     }
 
     const caption =
-      `✨ 𝐈𝐦𝐚𝐠𝐞 𝐃𝐞𝐭𝐚𝐢𝐥𝐬 ✨\n\n` +
-      `⦿ 𝐅𝐨𝐫𝐦𝐚𝐭: ${metadata.format || "Unknown"}\n` +
-      `⦿ 𝐖𝐢𝐝𝐭𝐡: ${metadata.width || 0}px\n` +
-      `⦿ 𝐇𝐞𝐢𝐠𝐡𝐭: ${metadata.height || 0}px\n` +
-      `⦿ 𝐀𝐬𝐩𝐞𝐜𝐭 𝐑𝐚𝐭𝐢𝐨: ${ratio} (${orientationType})\n` +
-      `⦿ 𝐅𝐢𝐥𝐞 𝐒𝐢𝐳𝐞: ${(imgBuffer.byteLength / 1024).toFixed(2)} KB (${(imgBuffer.byteLength / (1024 * 1024)).toFixed(2)} MB)\n` +
-      `⦿ 𝐁𝐢𝐭 𝐃𝐞𝐩𝐭𝐡: ${metadata.depth || "N/A"}\n` +
-      `⦿ 𝐂𝐡𝐚𝐧𝐧𝐞𝐥𝐬: ${metadata.channels || "N/A"}\n` +
-      `⦿ 𝐂𝐨𝐥𝐨𝐫 𝐒𝐩𝐚𝐜𝐞: ${metadata.space || "N/A"}\n` +
-      `⦿ 𝐇𝐚𝐬 𝐀𝐥𝐩𝐡𝐚: ${metadata.hasAlpha ? "Yes" : "No"}\n` +
-      `⦿ 𝐂𝐨𝐦𝐩𝐫𝐞𝐬𝐬𝐢𝐨𝐧: ${metadata.compression || "N/A"}\n` +
-      `⦿ 𝐎𝐫𝐢𝐞𝐧𝐭𝐚𝐭𝐢𝐨𝐧: ${metadata.orientation || "N/A"}\n` +
-      `⦿ 𝐏𝐫𝐨𝐠𝐫𝐞𝐬𝐬𝐢𝐯𝐞: ${metadata.isProgressive ? "Yes" : "No"}`;
+      `✨ DÉTAILS DE L'IMAGE ✨\n\n` +
+      `⦿ Format : ${metadata.format || "Inconnu"}\n` +
+      `⦿ Largeur : ${metadata.width || 0}px\n` +
+      `⦿ Hauteur : ${metadata.height || 0}px\n` +
+      `⦿ Ratio : ${ratio} (${orientationType})\n` +
+      `⦿ Taille du fichier : ${(imgBuffer.byteLength / 1024).toFixed(2)} KB (${(imgBuffer.byteLength / (1024 * 1024)).toFixed(2)} MB)\n` +
+      `⦿ Profondeur des bits : ${metadata.depth || "N/A"}\n` +
+      `⦿ Canaux : ${metadata.channels || "N/A"}\n` +
+      `⦿ Espace colorimétrique : ${metadata.space || "N/A"}\n` +
+      `⦿ Alpha : ${metadata.hasAlpha ? "Oui" : "Non"}\n` +
+      `⦿ Compression : ${metadata.compression || "N/A"}\n` +
+      `⦿ Orientation : ${metadata.orientation || "N/A"}\n` +
+      `⦿ Progressif : ${metadata.isProgressive ? "Oui" : "Non"}\n\n` +
+      `🧠 Commande créée par Christus 💙`;
 
     await api.sendMessage(
       {
@@ -104,7 +100,7 @@ module.exports.onStart = async ({ api, event }) => {
   } catch (err) {
     console.error(err);
     return api.sendMessage(
-      "⚠️ 𝐎𝐨𝐩𝐬! 𝐒𝐨𝐦𝐞𝐭𝐡𝐢𝐧𝐠 𝐰𝐞𝐧𝐭 𝐰𝐫𝐨𝐧𝐠.\n💬 𝐏𝐥𝐞𝐚𝐬𝐞 𝐭𝐫𝐲 𝐚𝐠𝐚𝐢𝐧 𝐥𝐚𝐭𝐞𝐫!",
+      "⚠️ Oups ! Une erreur est survenue.\n💬 Veuillez réessayer plus tard !",
       event.threadID,
       event.messageID
     );
