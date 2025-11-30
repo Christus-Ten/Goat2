@@ -79,7 +79,7 @@ const handleAIRequest = async (api, event, userInput, message, isReply = false) 
 
     // Remplacer le créateur
     finalReply = finalReply
-      .replace(/Aryan Chauhan/gi, "Christus")
+      .replace(/Heck.ai/gi, "Christus")
       .replace(/Aryan/gi, "Christus");
 
     // Remplacer Shizu / Shizuka par Christus AI ou Christus Bot
