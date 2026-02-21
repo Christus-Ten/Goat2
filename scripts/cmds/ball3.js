@@ -17,7 +17,7 @@ const path = require("path");
 
 let fonts;
 try {
-  fonts = require('../../func/fonts.js');
+  fonts = require('../../func/font.js');
 } catch (error) {
   console.log("Fonts module not found, using fallback");
 }
