@@ -1,4 +1,4 @@
-const fonts = require('../../func/fonts.js');
+const fonts = require('../../func/font.js');
 const axios = require('axios');
 
 module.exports = {
@@ -267,4 +267,4 @@ function getUserRank(exp) {
 	if (exp < 50000) return "💎 Expert";
 	if (exp < 100000) return "👑 Master";
 	return "🌟 Legend";
-  }
+        }
